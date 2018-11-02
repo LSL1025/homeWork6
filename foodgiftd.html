@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Drinks Buttons</title>
+  <style type="text/css">
+  button{
+    background-color: aqua;
+    font-size: 14px;
+    height: 40px;
+    width: 80px;
+   
+  
+  }
+    button,
+    div,
+    form,
+    input {
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <button data-drinks="coke">Coke</button>
+  <button data-drinks="wine">Wine</button>
+  <button data-drinks="tequila">Tequila</button>
+  <button data-drinks="soda">Soda</button>
+  <button data-drinks="bubbletea">Bubble Tea</button>
+  <button data-drinks="sprite">Sprite</button>
+  <button data-drinks="cocktails">Cocktails</button>
+  <button data-drinks="coffe">Coffe</button>
+  <button data-drinks="beer">Beer</button>
+  <button data-drinks="milk">Milk</button>
+  <form id="movie-form">
+    <label for="drinks-input">Add a drink!</label>
+    <input type="text" id="drinks-input">
+    <br>
+
+    
+    <input id="add-drinks" type="submit" value="Add a drink!">
+  </form>
+
+  
+  
+  <div id="gifs-appear-here">
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    
+    $("button").on("click", function() {
+      // Grabbing and storing the data-drinks property value from the button
+      var drinks = $(this).attr("data-drinks");
+
+      // Constructing a queryURL using the Drinks name
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        drinks+ "&api_key=xQ6zBmLH2k9PahrxxaFWDbEjoegBUjjz";
+
+      
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+        // After data comes back from the request
+        .then(function(response) {
+          console.log(queryURL);
+
+          console.log(response);
+          // storing the data from the AJAX request in the results variable
+          var results = response.data;
+
+          
+          for (var i = 0; i < results.length; i++) {
+
+            // Creating and storing a div tag
+            var drinksDiv = $("<div>");
+
+            
+            var p = $("<p>").text("Rating: " + results[i].rating);
+
+            // Creating and storing an image tag
+            var drinksImage = $("<img>");
+            // Setting the src attribute of the image to a property pulled off the result item
+            drinksImage.attr("src", results[i].images.fixed_height.url);
+
+           
+            drinksDiv.append(p);
+            drinksDiv.append(drinksImage);
+
+          
+            $("#gifs-appear-here").prepend(drinksDiv);
+          }
+      });
+        $("#add-drinks").on("click", function(event) {
+        event.preventDefault();
+       
+        var drinks = $("#drinks-input").val().trim();
+
+        searchdrinks(drinks);
+
+
+
+        renderButtons();
+       });
+
+       
+        $(document).on("click", ".drinks-btn", displaydrinks);
+
+        
+        renderButtons();
+        
+
+    });
+  </script>
+</body>
+
+</html>
